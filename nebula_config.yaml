@@ -1,0 +1,36 @@
+nebula:
+  # Nebula Graph连接配置
+  hosts:
+    - host: "graphd"
+      port: 9669
+  
+  # 认证信息
+  username: "root"
+  password: "nebula"
+  space_name: "schema"
+  
+  # 连接池配置
+  connection_pool:
+    max_size: 10
+    timeout: 30
+    idle_time: 3600
+    interval_check: -1
+
+# 数据文件配置
+data:
+  entities_file: "docs/examples_notebooks/inputs/operation dulce/entities.parquet"
+  relationships_file: "docs/examples_notebooks/inputs/operation dulce/relationships.parquet"
+
+# 导入配置
+import:
+  batch_size: 1000
+  max_retries: 3
+  retry_delay: 1
+  enable_progress_bar: true
+  validate_data: true
+  
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "nebula_import.log"

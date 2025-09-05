@@ -1,0 +1,107 @@
+-- GraphRAG Schema for Nebula Graph
+-- 此文件定义了GraphRAG数据在Nebula Graph中的schema结构
+
+-- 使用已存在的schema空间
+USE schema;
+
+-- 创建通用的GraphRAG实体标签（TAG）
+-- 这些标签将根据entities.parquet中的type字段动态创建
+
+-- 通用实体属性模板
+-- CREATE TAG IF NOT EXISTS {ENTITY_TYPE}(
+--   id string,
+--   human_readable_id string,
+--   title string,
+--   description string,
+--   text_unit_ids string,
+--   frequency int,
+--   degree int,
+--   x double,
+--   y double
+-- );
+
+-- 常见的GraphRAG实体类型（示例）
+CREATE TAG IF NOT EXISTS PERSON(
+  id string,
+  human_readable_id string,
+  title string,
+  description string,
+  text_unit_ids string,
+  frequency int,
+  degree int,
+  x double,
+  y double
+);
+
+CREATE TAG IF NOT EXISTS ORGANIZATION(
+  id string,
+  human_readable_id string,
+  title string,
+  description string,
+  text_unit_ids string,
+  frequency int,
+  degree int,
+  x double,
+  y double
+);
+
+CREATE TAG IF NOT EXISTS LOCATION(
+  id string,
+  human_readable_id string,
+  title string,
+  description string,
+  text_unit_ids string,
+  frequency int,
+  degree int,
+  x double,
+  y double
+);
+
+CREATE TAG IF NOT EXISTS EVENT(
+  id string,
+  human_readable_id string,
+  title string,
+  description string,
+  text_unit_ids string,
+  frequency int,
+  degree int,
+  x double,
+  y double
+);
+
+CREATE TAG IF NOT EXISTS CONCEPT(
+  id string,
+  human_readable_id string,
+  title string,
+  description string,
+  text_unit_ids string,
+  frequency int,
+  degree int,
+  x double,
+  y double
+);
+
+-- GraphRAG关系类型（EDGE）
+CREATE EDGE IF NOT EXISTS RELATED(
+  id string,
+  human_readable_id string,
+  description string,
+  weight double,
+  combined_degree int,
+  text_unit_ids string
+);
+
+-- 创建索引以提高查询性能
+CREATE TAG INDEX IF NOT EXISTS person_title_index ON PERSON(title(256));
+CREATE TAG INDEX IF NOT EXISTS organization_title_index ON ORGANIZATION(title(256));
+CREATE TAG INDEX IF NOT EXISTS location_title_index ON LOCATION(title(256));
+CREATE TAG INDEX IF NOT EXISTS event_title_index ON EVENT(title(256));
+CREATE TAG INDEX IF NOT EXISTS concept_title_index ON CONCEPT(title(256));
+
+CREATE EDGE INDEX IF NOT EXISTS related_weight_index ON RELATED(weight);
+
+-- 显示创建的schema
+SHOW TAGS;
+SHOW EDGES;
+SHOW TAG INDEXES;
+SHOW EDGE INDEXES;

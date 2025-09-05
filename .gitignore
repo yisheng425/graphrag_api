@@ -58,3 +58,4 @@ docsite/
 
 # Jupyter notebook
 .ipynb_checkpoints/
+.coda/
