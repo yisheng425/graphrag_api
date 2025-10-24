@@ -1,3 +1,6 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
 """Pydantic schemas for the GraphRAG service API."""
 
 from __future__ import annotations
@@ -47,7 +50,6 @@ class IndexRequest(BaseModel):
 
     def to_payload(self, *, is_update: bool) -> dict[str, Any]:
         """Convert the request into a Celery-friendly payload."""
-
         return {
             "root": str(self.root),
             "config": str(self.config) if self.config else None,

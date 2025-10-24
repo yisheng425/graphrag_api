@@ -1,3 +1,6 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
 """Service layer exposing GraphRAG pipelines via API endpoints."""
 
 from graphrag.service.app import create_app

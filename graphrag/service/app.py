@@ -1,14 +1,20 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
 """FastAPI application exposing GraphRAG indexing as a service."""
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from fastapi import Depends, FastAPI, HTTPException, status
 
 from graphrag.service import schemas
 from graphrag.service.settings import ServiceSettings, get_settings
 from graphrag.service.tasks import enqueue_build_index, get_task
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _ensure_root_allowed(root: Path, settings: ServiceSettings) -> Path:
@@ -30,16 +36,18 @@ def _normalize_child_path(root: Path, path: Path | None) -> Path | None:
     if path is None:
         return None
     candidate = path.expanduser()
-    return candidate if candidate.is_absolute() else (root / candidate).resolve()
+    if candidate.is_absolute():
+        return candidate
+    return (root / candidate).resolve()
 
 
 def get_service_settings() -> ServiceSettings:
+    """Retrieve cached service configuration settings."""
     return get_settings()
 
 
 def create_app() -> FastAPI:
     """Instantiate the FastAPI application."""
-
     app = FastAPI(title="GraphRAG Service", version="1.0.0")
 
     @app.post("/index", response_model=schemas.TaskSubmissionResponse)

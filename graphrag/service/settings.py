@@ -1,3 +1,6 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
 """Configuration helpers for the GraphRAG service layer."""
 
 from __future__ import annotations
@@ -5,6 +8,7 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 from pathlib import Path
+
 from pydantic import BaseModel, Field, ValidationError
 
 from graphrag.config.enums import IndexingMethod
@@ -32,7 +36,6 @@ class ServiceSettings(BaseModel):
 
     def is_root_allowed(self, root: Path) -> bool:
         """Check whether the resolved project root is permitted."""
-
         if not self.allowed_roots:
             return True
         resolved = root.resolve()
@@ -59,20 +62,19 @@ def _build_settings_from_env() -> ServiceSettings:
         "GRAPHRAG_DEFAULT_INDEX_METHOD", IndexingMethod.Standard.value
     )
 
-    settings = ServiceSettings(
+    return ServiceSettings(
         celery_broker_url=broker,
         celery_result_backend=backend,
         allowed_roots=_parse_allowed_roots(roots_raw),
         default_index_method=_parse_index_method(default_method_raw),
     )
-    return settings
 
 
 @lru_cache(maxsize=1)
 def get_settings() -> ServiceSettings:
     """Load service settings with caching."""
-
     try:
         return _build_settings_from_env()
     except ValidationError as exc:
-        raise RuntimeError("Invalid GraphRAG service configuration") from exc
+        message = "Invalid GraphRAG service configuration"
+        raise RuntimeError(message) from exc

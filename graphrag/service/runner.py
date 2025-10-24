@@ -1,3 +1,6 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
 """Execution helpers for invoking GraphRAG pipelines."""
 
 from __future__ import annotations
@@ -29,7 +32,8 @@ def _normalize_method(raw: str | IndexingMethod) -> IndexingMethod:
     try:
         return IndexingMethod(raw)
     except ValueError as exc:
-        raise ValueError(f"Unsupported indexing method: {raw}") from exc
+        message = f"Unsupported indexing method: {raw}"
+        raise ValueError(message) from exc
 
 
 def _stringify_result(result: Any) -> str | None:
@@ -43,7 +47,6 @@ def _stringify_result(result: Any) -> str | None:
 
 def run_index_job(payload: dict[str, Any]) -> dict[str, Any]:
     """Run a GraphRAG indexing job synchronously."""
-
     root_dir = Path(payload["root"]).expanduser().resolve()
     if not root_dir.is_dir():
         msg = f"Invalid root directory: {root_dir}"
@@ -68,7 +71,11 @@ def run_index_job(payload: dict[str, Any]) -> dict[str, Any]:
         cli_overrides["reporting.base_dir"] = str(output_dir)
         cli_overrides["update_index_output.base_dir"] = str(output_dir)
 
-    config = load_config(root_dir=root_dir, config_filepath=config_path, cli_overrides=cli_overrides)
+    config = load_config(
+        root_dir=root_dir,
+        config_filepath=config_path,
+        cli_overrides=cli_overrides,
+    )
 
     if not payload.get("cache", True):
         config.cache.type = CacheType.none
@@ -107,12 +114,10 @@ def run_index_job(payload: dict[str, Any]) -> dict[str, Any]:
     if config.reporting.type == ReportingType.file:
         reporting_dir = config.reporting.base_dir
 
-    result = {
+    return {
         "encountered_errors": encountered_errors,
         "workflows": workflows,
         "output_dir": getattr(config.output, "base_dir", None),
         "reporting_dir": reporting_dir,
         "update_output_dir": getattr(config.update_index_output, "base_dir", None),
     }
-
-    return result
