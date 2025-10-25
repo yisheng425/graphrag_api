@@ -37,7 +37,7 @@ def enqueue_build_index(payload: dict[str, Any]) -> AsyncResult:
     return build_index_task.delay(payload)
 
 
-@celery_app.task(name="graphrag.run_query")
+@celery_app.task(name="graphrag.query")
 def query_task(payload: dict[str, Any]) -> dict[str, Any]:
     """Execute a GraphRAG query job inside a Celery worker."""
     return run_query_job(payload)
