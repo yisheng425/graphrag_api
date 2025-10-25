@@ -8,10 +8,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from fastapi import Depends, FastAPI, HTTPException, status
+from pydantic import ValidationError
 
 from graphrag.service import schemas
 from graphrag.service.settings import ServiceSettings, get_settings
-from graphrag.service.tasks import enqueue_build_index, get_task
+from graphrag.service.tasks import enqueue_build_index, enqueue_query, get_task
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -35,10 +36,23 @@ def _ensure_root_allowed(root: Path, settings: ServiceSettings) -> Path:
 def _normalize_child_path(root: Path, path: Path | None) -> Path | None:
     if path is None:
         return None
+
     candidate = path.expanduser()
     if candidate.is_absolute():
-        return candidate
-    return (root / candidate).resolve()
+        return candidate.resolve()
+
+    root_resolved = root.resolve()
+    parts = candidate.parts
+    base = root_resolved.parent if parts and parts[0] == root_resolved.name else root_resolved
+    resolved = (base / candidate).resolve()
+
+    if not resolved.is_relative_to(root_resolved):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"指定路径不在项目根目录中: {resolved}",
+        )
+
+    return resolved
 
 
 def get_service_settings() -> ServiceSettings:
@@ -109,6 +123,36 @@ def create_app() -> FastAPI:
         async_result = enqueue_build_index(payload)
         return schemas.TaskSubmissionResponse(task_id=async_result.id)
 
+    @app.post("/query", response_model=schemas.TaskSubmissionResponse)
+    def submit_query(
+        request: schemas.QueryRequest,
+        settings: ServiceSettings = Depends(get_service_settings),
+    ) -> schemas.TaskSubmissionResponse:
+        root = _ensure_root_allowed(request.root, settings)
+
+        config_path = _normalize_child_path(root, request.config)
+        data_path = _normalize_child_path(root, request.data)
+
+        if config_path and not config_path.is_file():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"配置文件不存在: {config_path}",
+            )
+
+        if data_path and not data_path.is_dir():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"数据目录不存在: {data_path}",
+            )
+
+        payload = request.to_payload()
+        payload["root"] = str(root)
+        payload["config"] = str(config_path) if config_path else None
+        payload["data"] = str(data_path) if data_path else None
+
+        async_result = enqueue_query(payload)
+        return schemas.TaskSubmissionResponse(task_id=async_result.id)
+
     @app.get("/tasks/{task_id}", response_model=schemas.TaskStatusResponse)
     def get_task_status(task_id: str) -> schemas.TaskStatusResponse:
         async_result = get_task(task_id)
@@ -124,7 +168,10 @@ def create_app() -> FastAPI:
         elif async_result.successful():
             result_payload = async_result.result
             if isinstance(result_payload, dict):
-                response.result = schemas.TaskResult.model_validate(result_payload)
+                try:
+                    response.result = schemas.TaskResult.model_validate(result_payload)
+                except ValidationError:
+                    response.result = schemas.QueryResult.model_validate(result_payload)
         return response
 
     return app

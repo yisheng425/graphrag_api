@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from celery import Celery
 
-from graphrag.service.runner import run_index_job
+from graphrag.service.runner import run_index_job, run_query_job
 from graphrag.service.settings import get_settings
 
 if TYPE_CHECKING:
@@ -35,6 +35,17 @@ def build_index_task(payload: dict[str, Any]) -> dict[str, Any]:
 def enqueue_build_index(payload: dict[str, Any]) -> AsyncResult:
     """Enqueue a build index task and return the async result."""
     return build_index_task.delay(payload)
+
+
+@celery_app.task(name="graphrag.run_query")
+def query_task(payload: dict[str, Any]) -> dict[str, Any]:
+    """Execute a GraphRAG query job inside a Celery worker."""
+    return run_query_job(payload)
+
+
+def enqueue_query(payload: dict[str, Any]) -> AsyncResult:
+    """Enqueue a query task and return the async result."""
+    return query_task.delay(payload)
 
 
 def get_task(task_id: str) -> AsyncResult:
