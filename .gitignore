@@ -22,7 +22,7 @@ output/lancedb
 venv/
 .conda
 .tmp
-
+.venv
 .env
 build.zip
 
@@ -59,3 +59,5 @@ docsite/
 # Jupyter notebook
 .ipynb_checkpoints/
 .coda/
+.semversioner
+.ruff_cache
