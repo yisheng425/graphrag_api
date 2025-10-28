@@ -1,0 +1,355 @@
+-- 通用实体
+CREATE TAG IF NOT EXISTS Manufacturer(name string);
+CREATE TAG IF NOT EXISTS Brand(name string);
+CREATE TAG IF NOT EXISTS MediaReport(
+  report_id string,
+  time timestamp,
+  title string,
+  category string,
+  source string,
+  website_type string,
+  url string,
+  keyword_id string,
+  industry string,
+  similar_count int,
+  baidu_weight int
+);
+CREATE TAG IF NOT EXISTS ConsumerComplaint(
+  complaint_id string,
+  type string,
+  register_date timestamp,
+  phone string,
+  name string,
+  company string,
+  credit_code string,
+  product_name string,
+  issue_time timestamp,
+  problem_details string,
+  feedback string,
+  problem_category string,
+  problem_details_category string,
+  object_category string,
+  object_category_full string
+);
+CREATE TAG IF NOT EXISTS Injury(
+  injury_id string,
+  report_card_id string,
+  id_number string,
+  name string,
+  gender string,
+  age int,
+  birth_date timestamp,
+  residence string,
+  education_level string,
+  occupation string,
+  injury_date timestamp,
+  medical_visit_time timestamp,
+  injury_cause string,
+  injury_location string,
+  activity_during_injury string,
+  is_intentional bool,
+  alcohol_status string,
+  injury_nature string,
+  injury_body_part string,
+  affected_system string,
+  severity string,
+  clinical_diagnosis string,
+  outcome string,
+  phone string,
+  is_typical_case bool,
+  related_product_name string,
+  related_product_category string,
+  related_product_small_category string
+);
+CREATE TAG IF NOT EXISTS FaultTag(
+  tag_id string,
+  primary_tag string,
+  secondary_tag string,
+  severity string,
+  keywords string,
+  second_keywords string,
+  related_type string,
+  product_category string
+);
+CREATE TAG IF NOT EXISTS Type(type string);
+
+-- 汽车实体
+CREATE TAG IF NOT EXISTS Vehicle_DefectReport(
+  defect_id string,
+  defect_number string,
+  report_time timestamp,
+  name string,
+  phone string,
+  province string,
+  city string,
+  submit_time timestamp,
+  defect_description string,
+  defect_details string,
+  accident bool,
+  casualties bool,
+  fire bool,
+  status string,
+  report_method string,
+  mileage int,
+  register_date timestamp,
+  is_warranty bool,
+  is_registered bool,
+  fuel_type string,
+  vehicle_type string,
+  product_attribute string,
+  enterprise_type string,
+  assembly string,
+  is_manufacturer bool,
+  is_accurate bool,
+  cause_analysis string,
+  measures string,
+  is_repaired bool,
+  has_recall bool,
+  has_tsb bool,
+  is_common bool
+);
+CREATE TAG IF NOT EXISTS ModelSeries(name string, model_number string);
+CREATE TAG IF NOT EXISTS CarSpec(
+  model_id string,
+  brand string,
+  model_name string,
+  msrp int,
+  level string,
+  energy_type string,
+  launch_date date,
+  cltc_range int,
+  fast_charge_time float,
+  fast_charge_pct_low int,
+  fast_charge_pct_high int,
+  max_power_kw int,
+  max_torque_nm int,
+  body_style string,
+  motor_ps int,
+  length_mm int,
+  width_mm int,
+  height_mm int,
+  wheelbase_mm int,
+  front_track_mm int,
+  rear_track_mm int,
+  min_ground_clearance_mm int,
+  approach_angle_deg float,
+  departure_angle_deg float,
+  min_turning_radius_m float,
+  doors int,
+  seats int,
+  frunk_volume_l int,
+  trunk_volume_l int,
+  drag_coefficient float,
+  rear_motor_brand string,
+  rear_motor_model string,
+  motor_type string,
+  motor_layout string,
+  drive_motors int,
+  battery_type string,
+  battery_brand string,
+  battery_tech string,
+  battery_cooling string,
+  battery_energy_kwh float,
+  power_consumption_kwh_100km float,
+  supports_fast_charge bool,
+  high_voltage_platform_v int,
+  charger_price int,
+  warranty_vehicle string,
+  warranty_battery string,
+  curb_weight_kg int,
+  max_gross_weight_kg int,
+  top_speed_kmh int,
+  acceleration_0_100_s float,
+  energy_equivalent_l_100km float
+);
+CREATE TAG IF NOT EXISTS Vehicle(
+  vin string,
+  production_start_date timestamp,
+  production_end_date timestamp
+);
+CREATE TAG IF NOT EXISTS TSB(
+  tsb_id string,
+  title string,
+  file_number string,
+  notice_type string,
+  assembly string,
+  description string,
+  possible_consequences string,
+  repair_measures string,
+  submit_time timestamp,
+  add_time timestamp,
+  review_time timestamp,
+  publish_date timestamp
+);
+CREATE TAG IF NOT EXISTS Domestic_Recall(
+  recall_id string,
+  recall_number string,
+  recall_sequence string,
+  implementation_start timestamp,
+  implementation_end timestamp,
+  total_vehicles int,
+  model_count int,
+  production_start timestamp,
+  production_end timestamp,
+  vin_start string,
+  vin_end string,
+  recall_count int,
+  defect_description string,
+  possible_consequences string,
+  recall_measures string,
+  emergency_measures string,
+  improvement_measures string,
+  complaint_cases string,
+  accident_cases string,
+  notification_method string,
+  other_info string
+);
+CREATE TAG IF NOT EXISTS ForeignRecall(
+  recall_id string,
+  translation_date timestamp,
+  announcement_date timestamp,
+  recall_number string,
+  foreign_manufacturer string,
+  foreign_model_name string,
+  domestic_brand string,
+  related_models string,
+  domestic_manufacturer string,
+  domestic_models string,
+  filing_status string,
+  recall_count int,
+  production_start timestamp,
+  production_end timestamp,
+  defect_summary string,
+  recall_measures string,
+  production_country string,
+  foreign_submit_date timestamp,
+  foreign_start_date timestamp,
+  recall_type string,
+  vin_range_start string,
+  vin_range_end string,
+  model_years string,
+  affected_components string,
+  recall_initiator string,
+  source_url string,
+  oecd_category string,
+  country string
+);
+CREATE TAG IF NOT EXISTS VehicleCase(
+  incident_id string,
+  vin string,
+  producer string,
+  brand string,
+  series string,
+  model string,
+  component_category string,
+  fault_description string,
+  fault_cause string,
+  potential_outcome string,
+  repair_measures string,
+  has_tsb bool,
+  tsb_number string,
+  recall_status bool,
+  recall_number string,
+  owner_name string,
+  owner_phone string,
+  incident_report string
+);
+CREATE TAG IF NOT EXISTS CarTag(
+  tag_id string,
+  level1 string,
+  level2 string,
+  label string,
+  keywords string,
+  severity string,
+  need_recall bool
+);
+
+-- 消费品实体
+CREATE TAG IF NOT EXISTS ConsumerProductDefect(
+  defect_id string,
+  product_category string,
+  product_name string,
+  brand string,
+  model string,
+  production_origin string,
+  purchase_date timestamp,
+  usage_scenario string,
+  defect_description string,
+  caused_injury bool,
+  injury_type string,
+  severity string,
+  defect_summary string,
+  product_label string,
+  defect_label string,
+  primary_tag string,
+  fault_level string,
+  first_case_id string
+);
+CREATE TAG IF NOT EXISTS ConsumerProductCase(
+  case_id string,
+  producer string,
+  producer_location string,
+  brand string,
+  status string,
+  investigation_result string,
+  defect_count int
+);
+CREATE TAG IF NOT EXISTS ConsumerProductModel(model string);
+CREATE TAG IF NOT EXISTS ProductRecall(
+  recall_id string,
+  producer_name string,
+  product_name string,
+  brand string,
+  model string,
+  production_date_start date,
+  production_date_end date,
+  quantity_involved int,
+  batch_number string,
+  product_description string,
+  defect string,
+  potential_consequence string,
+  emergency_measures string,
+  recall_measures string,
+  recall_responsible_organization string,
+  recall_contact string,
+  recall_schedule string,
+  additional_report_content string,
+  additional_info string
+);
+
+-- 汽车相关关系
+CREATE EDGE IF NOT EXISTS REPORT_MANUFACTURER(description string);
+CREATE EDGE IF NOT EXISTS REPORT_BRAND(description string);
+CREATE EDGE IF NOT EXISTS REPORT_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS REPORT_VEHICLE(description string);
+CREATE EDGE IF NOT EXISTS REPORT_FAULT_TAG(description string);
+CREATE EDGE IF NOT EXISTS MANUFACTURER_BRAND(description string);
+CREATE EDGE IF NOT EXISTS BRAND_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS MODEL_SERIES_VEHICLE(description string);
+CREATE EDGE IF NOT EXISTS MODEL_SERIES_CarSpec(description string);
+CREATE EDGE IF NOT EXISTS RECALL_MANUFACTURER(description string);
+CREATE EDGE IF NOT EXISTS RECALL_BRAND(description string);
+CREATE EDGE IF NOT EXISTS RECALL_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS TSB_MANUFACTURER(description string);
+CREATE EDGE IF NOT EXISTS TSB_BRAND(description string);
+CREATE EDGE IF NOT EXISTS TSB_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS MEDIA_BRAND(description string);
+CREATE EDGE IF NOT EXISTS MEDIA_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS MEDIA_FAULT_TAG(description string);
+CREATE EDGE IF NOT EXISTS COMPLAINT_BRAND(description string);
+CREATE EDGE IF NOT EXISTS COMPLAINT_MODEL_SERIES(description string);
+CREATE EDGE IF NOT EXISTS COMPLAINT_FAULT_TAG(description string);
+CREATE EDGE IF NOT EXISTS FOREIGN_RECALL_BRAND(description string);
+CREATE EDGE IF NOT EXISTS FOREIGN_RECALL_DOMESTIC_MANUFACTURER(description string);
+CREATE EDGE IF NOT EXISTS INJURY_DEFECT_REPORT(description string);
+CREATE EDGE IF NOT EXISTS INJURY_VEHICLE(description string);
+CREATE EDGE IF NOT EXISTS INJURY_ModelSeries(description string);
+
+-- 消费品相关关系
+CREATE EDGE IF NOT EXISTS DEFECT_TYPE(description string);
+CREATE EDGE IF NOT EXISTS DEFECT_MANUFACTURE(description string);
+CREATE EDGE IF NOT EXISTS DEFECT_MODEL(description string);
+CREATE EDGE IF NOT EXISTS CASE_PRODUCER(description string);
+CREATE EDGE IF NOT EXISTS DEFECT_FAULT_TAG(description string);
+CREATE EDGE IF NOT EXISTS FAULT_TAG_MODEL(description string);
+CREATE EDGE IF NOT EXISTS INJURY_MODEL(description string);

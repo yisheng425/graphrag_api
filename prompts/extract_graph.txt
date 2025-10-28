@@ -1,0 +1,131 @@
+
+-Goal-
+Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
+
+-Steps-
+1. Identify all entities. For each identified entity, extract the following information:
+- entity_name: Name of the entity, capitalized
+- entity_type: One of the following types: [automotive manufacturer, vehicle model, safety standard, recall action, consumer complaint, dealership, insurance company, contact information, regulatory requirement, automotive component]
+- entity_description: Comprehensive description of the entity's attributes and activities
+Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
+For each pair of related entities, extract the following information:
+- source_entity: name of the source entity, as identified in step 1
+- target_entity: name of the target entity, as identified in step 1
+- relationship_description: explanation as to why you think the source entity and the target entity are related to each other
+- relationship_strength: an integer score between 1 to 10, indicating strength of the relationship between the source entity and target entity
+Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. Return output in Chinese as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+
+4. If you have to translate into Chinese, just translate the descriptions, nothing else!
+
+5. When finished, output {completion_delimiter}.
+
+-Examples-
+######################
+
+Example 1:
+
+entity_types: [automotive manufacturer, vehicle model, safety standard, recall action, consumer complaint, dealership, insurance company, contact information, regulatory requirement, automotive component]
+text:
+缺陷概述	海湾丰田公司 (GST) 正在召回部分配备 GST 配件的丰田 2023 年款 GR Supra，2024 年款 4 Runner、卡罗拉、Grand Highlander、Grand Highlander 混合动力、兰德酷路泽混合动力、Tacoma、Tacoma 混合动力，2023-2024 年款 BZ4X、Corolla Cross 混合动力、GR 卡罗拉、GR86、汉兰达、汉兰达混合动力、普锐斯、普锐斯 Prime、Sequoia 混合动力、Tundra、Tundra 混合动力、Venza 混合动力，2023-2025 年款皇冠和 2025 年款凯美瑞混合动力汽车。载重量修改标签可能会显示不准确的附加重量值。因此，这些车辆不符合联邦机动车安全标准第 110 号：“轮胎选择和轮毂”的要求。 最大载重量不正确的车辆可能会超载，从而增加发生碰撞的风险。
+召回措施	GST 将免费向车主邮寄新标签。车主通知信已于 2024 年 9 月 16 日邮寄。车主可联系海湾丰田客服中心，电话：1-800-444-1074。海湾丰田公司此次召回编号为 24R2。
+------------------------
+output:
+("entity"{tuple_delimiter}海湾丰田公司 (GST){tuple_delimiter}automotive manufacturer{tuple_delimiter}海湾丰田公司 (GST) 是一家负责召回部分丰田车辆的汽车制造商)
+{record_delimiter}
+("entity"{tuple_delimiter}2023 年款 GR Supra{tuple_delimiter}vehicle model{tuple_delimiter}2023 年款 GR Supra 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}2024 年款 4 Runner{tuple_delimiter}vehicle model{tuple_delimiter}2024 年款 4 Runner 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}卡罗拉{tuple_delimiter}vehicle model{tuple_delimiter}卡罗拉是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Grand Highlander{tuple_delimiter}vehicle model{tuple_delimiter}Grand Highlander 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Grand Highlander 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Grand Highlander 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}兰德酷路泽混合动力{tuple_delimiter}vehicle model{tuple_delimiter}兰德酷路泽混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Tacoma{tuple_delimiter}vehicle model{tuple_delimiter}Tacoma 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Tacoma 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Tacoma 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}2023-2024 年款 BZ4X{tuple_delimiter}vehicle model{tuple_delimiter}2023-2024 年款 BZ4X 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Corolla Cross 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Corolla Cross 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}GR 卡罗拉{tuple_delimiter}vehicle model{tuple_delimiter}GR 卡罗拉是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}GR86{tuple_delimiter}vehicle model{tuple_delimiter}GR86 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}汉兰达{tuple_delimiter}vehicle model{tuple_delimiter}汉兰达是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}汉兰达混合动力{tuple_delimiter}vehicle model{tuple_delimiter}汉兰达混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}普锐斯{tuple_delimiter}vehicle model{tuple_delimiter}普锐斯是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}普锐斯 Prime{tuple_delimiter}vehicle model{tuple_delimiter}普锐斯 Prime 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Sequoia 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Sequoia 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Tundra{tuple_delimiter}vehicle model{tuple_delimiter}Tundra 是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Tundra 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Tundra 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}Venza 混合动力{tuple_delimiter}vehicle model{tuple_delimiter}Venza 混合动力是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter}2023-2025 年款皇冠{tuple_delimiter}vehicle model{tuple_delimiter}2023-2025 年款皇冠是被召回的丰田车型之一)
+{record_delimiter}
+("entity"{tuple_delimiter
+#############################
+
+
+Example 2:
+
+entity_types: [automotive manufacturer, vehicle model, safety standard, recall action, consumer complaint, dealership, insurance company, contact information, regulatory requirement, automotive component]
+text:
+本人23年在北京运通晟宝 宝马4S店购买的5系轿车，25年2月份，因安全带挤压造成门内饰板损坏，报保险后，保险公司理赔，在4S店订配件，配件到了与我原车内饰板不一样。后联系宝马中国400与北京运通晟宝，两边都无法提供我原车内饰板一样的配件。诉求中国宝马给我提供我原车一致配件。
+------------------------
+output:
+("entity"{tuple_delimiter}宝马中国{tuple_delimiter}automotive manufacturer{tuple_delimiter}宝马中国是宝马品牌在中国的官方代表，负责车辆销售、售后服务及客户支持。)
+{record_delimiter}
+("entity"{tuple_delimiter}5系轿车{tuple_delimiter}vehicle model{tuple_delimiter}宝马5系轿车是一款豪华中型轿车，广受消费者欢迎。)
+{record_delimiter}
+("entity"{tuple_delimiter}安全带{tuple_delimiter}automotive component{tuple_delimiter}安全带是车辆的重要安全部件，用于保护乘客在发生碰撞时免受伤害。)
+{record_delimiter}
+("entity"{tuple_delimiter}门内饰板{tuple_delimiter}automotive component{tuple_delimiter}门内饰板是车辆内部装饰的一部分，提供美观和功能性。)
+{record_delimiter}
+("entity"{tuple_delimiter}北京运通晟宝 宝马4S店{tuple_delimiter}dealership{tuple_delimiter}北京运通晟宝 宝马4S店是宝马品牌授权的销售和服务中心，提供车辆销售及维修服务。)
+{record_delimiter}
+("entity"{tuple_delimiter}保险公司{tuple_delimiter}insurance company{tuple_delimiter}保险公司负责为车辆损坏提供理赔服务。)
+{record_delimiter}
+("entity"{tuple_delimiter}中国宝马400{tuple_delimiter}contact information{tuple_delimiter}中国宝马400是宝马中国的客户服务热线，用于处理消费者的咨询和投诉。)
+{record_delimiter}
+("entity"{tuple_delimiter}理赔{tuple_delimiter}recall action{tuple_delimiter}理赔是保险公司对车辆损坏进行赔偿的过程。)
+{record_delimiter}
+("entity"{tuple_delimiter}消费者诉求{tuple_delimiter}consumer complaint{tuple_delimiter}消费者对宝马中国提出的要求，希望获得与原车一致的配件。)
+{record_delimiter}
+("relationship"{tuple_delimiter}宝马中国{tuple_delimiter}北京运通晟宝 宝马4S店{tuple_delimiter}宝马中国与北京运通晟宝 宝马4S店合作，共同提供车辆销售及售后服务。{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}安全带{tuple_delimiter}门内饰板{tuple_delimiter}安全带挤压导致门内饰板损坏。{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}保险公司{tuple_delimiter}理赔{tuple_delimiter}保险公司为门内饰板损坏提供理赔服务。{tuple_delimiter}9)
+{record_delimiter}
+("relationship"{tuple_delimiter}消费者诉求{tuple_delimiter}宝马中国{tuple_delimiter}消费者希望宝马中国提供与原车一致的门内饰板配件。{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}消费者诉求{tuple_delimiter}北京运通晟宝 宝马4S店{tuple_delimiter}消费者希望北京运通晟宝 宝马4S店解决配件问题。{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}中国宝马400{tuple_delimiter}宝马中国{tuple_delimiter}中国宝马400是宝马中国的客户服务渠道，用于处理消费者问题。{tuple_delimiter}9)
+{completion_delimiter}
+#############################
+
+
+
+-Real Data-
+######################
+entity_types: [automotive manufacturer, vehicle model, safety standard, recall action, consumer complaint, dealership, insurance company, contact information, regulatory requirement, automotive component]
+text: {input_text}
+######################
+output:
