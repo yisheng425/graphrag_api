@@ -1,0 +1,71 @@
+nebula:
+  # Nebula Graph连接配置
+  hosts:
+    - host: 127.0.0.1
+      port: 9669
+  
+  # 认证信息
+  username: "root"
+  password: "nebula"
+  space_name: "schema_incident"
+  
+  # 连接池配置
+  connection_pool:
+    max_size: 10
+    timeout: 30
+    idle_time: 3600
+    interval_check: -1
+
+# 数据文件配置
+data:
+  entities_file: "output/entities.parquet"
+  relationships_file: "output/relationships.parquet"
+
+# 导入配置
+import:
+  batch_size: 1000
+  max_retries: 3
+  retry_delay: 1
+  enable_progress_bar: true
+  validate_data: true
+  
+  # Schema创建和验证配置
+  schema_creation_retries: 3        # schema创建最大重试次数
+  schema_wait_timeout: 30           # 等待schema生效的最大时间（秒）
+  schema_verification_interval: 1   # schema验证查询间隔（秒）
+  
+  # 重复导入避免配置
+  enable_incremental: true              # 启用增量导入 (默认true)
+  enable_duplicate_detection: true      # 启用重复检测 (默认true)
+  enable_import_tracking: true          # 启用导入跟踪 (默认true)
+  
+  # 性能优化配置
+  cache_batch_size: 10000              # 缓存构建批次大小
+  use_bloom_filter: false              # 使用布隆过滤器优化性能 (需要安装pybloom_live)
+  bloom_filter_error_rate: 0.01       # 布隆过滤器误报率
+  
+  # 元数据管理配置
+  metadata_retention_days: 30          # 元数据保留天数
+  cleanup_old_metadata: true           # 自动清理旧元数据
+  
+  # UPSERT行为配置
+  upsert_mode: "insert_ignore"         # UPSERT模式: "insert_ignore", "replace", "update"
+  conflict_resolution: "skip"          # 冲突解决: "skip", "overwrite", "merge"
+  
+  # 验证配置
+  validate_before_import: true         # 导入前验证数据
+  validate_after_import: true          # 导入后验证数据
+  enable_rollback: false               # 启用失败回滚 (暂不支持)
+  
+  # 实体类型处理配置
+  enable_type_inference: true          # 启用类型推断
+  enable_conflict_resolution: true     # 启用冲突解决
+  max_entity_type_length: 64          # 最大实体类型名称长度
+  invalid_type_handling: "infer"       # 无效类型处理: "skip", "infer", "default"
+  default_entity_type: "UNKNOWN_ENTITY" # 默认实体类型名称
+  
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "nebula_import.log"

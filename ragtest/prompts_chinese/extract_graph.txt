@@ -1,0 +1,158 @@
+
+-Goal-
+Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
+
+-Steps-
+1. Identify all entities. For each identified entity, extract the following information:
+- entity_name: Name of the entity, capitalized
+- entity_type: One of the following types: [manufacturer, brand, vehicle, model_series, consumer_complaint, consumer_product_defect, consumer_product_case, consumer_product_model, fault_tag, category, media_report, domestic_recall, foreign_recall, tsb, car_spec, vehicle_defect_report, injury, type]
+- entity_description: Comprehensive description of the entity's attributes and activities
+Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
+For each pair of related entities, extract the following information:
+- source_entity: name of the source entity, as identified in step 1
+- target_entity: name of the target entity, as identified in step 1
+- relationship_description: explanation as to why you think the source entity and the target entity are related to each other
+- relationship_strength: an integer score between 1 to 10, indicating strength of the relationship between the source entity and target entity
+Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. Return output in Chinese as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+
+4. If you have to translate into Chinese, just translate the descriptions, nothing else!
+
+5. When finished, output {completion_delimiter}.
+
+-Examples-
+######################
+
+Example 1:
+
+entity_types: [manufacturer, brand, vehicle, model_series, consumer_complaint, consumer_product_defect, consumer_product_case, consumer_product_model, fault_tag, category, media_report, domestic_recall, foreign_recall, tsb, car_spec, vehicle_defect_report, injury, type]
+text:
+帕萨特行驶3.2万公里发动机异响
+卡罗拉混动版动力电池故障灯亮起
+锐界自动变速箱换挡顿挫严重
+昂科威行车电脑频繁死机黑屏
+
+------------------------
+output:
+("entity"{tuple_delimiter}帕萨特{tuple_delimiter}vehicle{tuple_delimiter}帕萨特是一款大众品牌的中型轿车，行驶了3.2万公里后出现发动机异响问题)
+{record_delimiter}
+("entity"{tuple_delimiter}发动机异响{tuple_delimiter}consumer_product_defect{tuple_delimiter}发动机在运行过程中发出异常声音，可能与机械故障或设计缺陷有关)
+{record_delimiter}
+("entity"{tuple_delimiter}卡罗拉混动版{tuple_delimiter}vehicle{tuple_delimiter}卡罗拉混动版是丰田品牌的混合动力车型，出现动力电池故障灯亮起的问题)
+{record_delimiter}
+("entity"{tuple_delimiter}动力电池故障灯亮起{tuple_delimiter}consumer_product_defect{tuple_delimiter}动力电池故障灯亮起表明电池系统可能存在问题，需要进一步检查或维修)
+{record_delimiter}
+("entity"{tuple_delimiter}锐界{tuple_delimiter}vehicle{tuple_delimiter}锐界是福特品牌的SUV车型，自动变速箱换挡时出现严重顿挫问题)
+{record_delimiter}
+("entity"{tuple_delimiter}自动变速箱换挡顿挫严重{tuple_delimiter}consumer_product_defect{tuple_delimiter}自动变速箱在换挡过程中出现明显的顿挫感，可能影响驾驶体验和车辆性能)
+{record_delimiter}
+("entity"{tuple_delimiter}昂科威{tuple_delimiter}vehicle{tuple_delimiter}昂科威是别克品牌的中型SUV车型，行车电脑频繁死机黑屏)
+{record_delimiter}
+("entity"{tuple_delimiter}行车电脑频繁死机黑屏{tuple_delimiter}consumer_product_defect{tuple_delimiter}行车电脑在运行过程中频繁出现死机和黑屏现象，可能影响车辆的正常操作和安全性)
+{record_delimiter}
+("relationship"{tuple_delimiter}帕萨特{tuple_delimiter}发动机异响{tuple_delimiter}帕萨特在行驶3.2万公里后出现发动机异响问题，表明车辆可能存在机械故障或设计缺陷{tuple_delimiter}7)
+{record_delimiter}
+("relationship"{tuple_delimiter}卡罗拉混动版{tuple_delimiter}动力电池故障灯亮起{tuple_delimiter}卡罗拉混动版出现动力电池故障灯亮起问题，可能与电池系统故障有关{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}锐界{tuple_delimiter}自动变速箱换挡顿挫严重{tuple_delimiter}锐界的自动变速箱在换挡时出现严重顿挫问题，可能影响驾驶体验和车辆性能{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}昂科威{tuple_delimiter}行车电脑频繁死机黑屏{tuple_delimiter}昂科威的行车电脑频繁死机黑屏问题可能影响车辆的正常操作和安全性{tuple_delimiter}9)
+{completion_delimiter}
+#############################
+
+
+Example 2:
+
+entity_types: [manufacturer, brand, vehicle, model_series, consumer_complaint, consumer_product_defect, consumer_product_case, consumer_product_model, fault_tag, category, media_report, domestic_recall, foreign_recall, tsb, car_spec, vehicle_defect_report, injury, type]
+text:
+在部分2021-2022年产A4L和A6L车型中，发动机冷却系统可能存在水泵密封不良问题。
+在部分2020-2021年生产的昂科威系列车辆中，前悬架减震器支架可能因材料疲劳产生微裂纹。
+在部分2021-2022年生产的锐界和探险者车型中，变速箱油温传感器可能存在精度偏差问题。
+在部分2021-2022年生产的C级和E级车型中，电子制动助力系统可能因软件问题导致助力不稳定。
+
+------------------------
+output:
+("entity"{tuple_delimiter}A4L{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年产的A4L车型可能存在发动机冷却系统水泵密封不良问题)
+{record_delimiter}
+("entity"{tuple_delimiter}A6L{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年产的A6L车型可能存在发动机冷却系统水泵密封不良问题)
+{record_delimiter}
+("entity"{tuple_delimiter}发动机冷却系统{tuple_delimiter}CONSUMER_PRODUCT_DEFECT{tuple_delimiter}发动机冷却系统可能存在水泵密封不良问题)
+{record_delimiter}
+("entity"{tuple_delimiter}昂科威{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2020-2021年生产的昂科威系列车辆可能因前悬架减震器支架材料疲劳产生微裂纹)
+{record_delimiter}
+("entity"{tuple_delimiter}前悬架减震器支架{tuple_delimiter}CONSUMER_PRODUCT_DEFECT{tuple_delimiter}前悬架减震器支架可能因材料疲劳产生微裂纹)
+{record_delimiter}
+("entity"{tuple_delimiter}锐界{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年生产的锐界车型可能存在变速箱油温传感器精度偏差问题)
+{record_delimiter}
+("entity"{tuple_delimiter}探险者{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年生产的探险者车型可能存在变速箱油温传感器精度偏差问题)
+{record_delimiter}
+("entity"{tuple_delimiter}变速箱油温传感器{tuple_delimiter}CONSUMER_PRODUCT_DEFECT{tuple_delimiter}变速箱油温传感器可能存在精度偏差问题)
+{record_delimiter}
+("entity"{tuple_delimiter}C级{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年生产的C级车型可能因电子制动助力系统软件问题导致助力不稳定)
+{record_delimiter}
+("entity"{tuple_delimiter}E级{tuple_delimiter}MODEL_SERIES{tuple_delimiter}2021-2022年生产的E级车型可能因电子制动助力系统软件问题导致助力不稳定)
+{record_delimiter}
+("entity"{tuple_delimiter}电子制动助力系统{tuple_delimiter}CONSUMER_PRODUCT_DEFECT{tuple_delimiter}电子制动助力系统可能因软件问题导致助力不稳定)
+{record_delimiter}
+("relationship"{tuple_delimiter}A4L{tuple_delimiter}发动机冷却系统{tuple_delimiter}A4L车型的发动机冷却系统可能存在水泵密封不良问题{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}A6L{tuple_delimiter}发动机冷却系统{tuple_delimiter}A6L车型的发动机冷却系统可能存在水泵密封不良问题{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}昂科威{tuple_delimiter}前悬架减震器支架{tuple_delimiter}昂科威系列车辆的前悬架减震器支架可能因材料疲劳产生微裂纹{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}锐界{tuple_delimiter}变速箱油温传感器{tuple_delimiter}锐界车型的变速箱油温传感器可能存在精度偏差问题{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}探险者{tuple_delimiter}变速箱油温传感器{tuple_delimiter}探险者车型的变速箱油温传感器可能存在精度偏差问题{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}C级{tuple_delimiter}电子制动助力系统{tuple_delimiter}C级车型的电子制动助力系统可能因软件问题导致助力不稳定{tuple_delimiter}8)
+{record_delimiter}
+#############################
+
+
+Example 3:
+
+entity_types: [manufacturer, brand, vehicle, model_series, consumer_complaint, consumer_product_defect, consumer_product_case, consumer_product_model, fault_tag, category, media_report, domestic_recall, foreign_recall, tsb, car_spec, vehicle_defect_report, injury, type]
+text:
+本人于2024年12月在华为官方旗舰店购买的Mate60手机，使用三个月后出现严重发热和电池快速耗尽问题，联系客服多次未得到有效解决，要求更换同型号新机或退款。
+2025年1月10日晚上使用滴滴打车从北京西站到朝阳区，司机故意绕路，且态度恶劣，投诉到平台后未得到合理解决，要求退还多收费用并赔偿。
+2025年2月通过苏宁易购购买海尔冰箱，收到后发现有明显凹痕，申请退换货被拒，客服推诿责任，要求退货退款或更换无损商品。
+想了解关于进口食品标签标识的相关规定，特别是对于过敏原标注的要求，以及不符合规定的处罚措施。
+2025年4月购买的小米13手机，使用一个月后出现频繁死机、重启问题，送修后被告知是主板问题但不属于保修范围，要求免费维修或更换。
+
+------------------------
+output:
+("entity"{tuple_delimiter}华为{tuple_delimiter}manufacturer{tuple_delimiter}华为是一家中国领先的科技公司，生产包括Mate60手机在内的多种电子产品){record_delimiter}  
+("entity"{tuple_delimiter}Mate60{tuple_delimiter}consumer_product_model{tuple_delimiter}Mate60是华为生产的一款智能手机，用户报告其存在发热和电池快速耗尽的问题){record_delimiter}  
+("entity"{tuple_delimiter}发热和电池快速耗尽问题{tuple_delimiter}consumer_product_defect{tuple_delimiter}用户在使用Mate60手机时遇到的主要问题，包括设备过热和电池耗电过快){record_delimiter}  
+("entity"{tuple_delimiter}滴滴打车{tuple_delimiter}brand{tuple_delimiter}滴滴打车是中国一家提供网约车服务的品牌){record_delimiter}  
+("entity"{tuple_delimiter}司机绕路和态度恶劣{tuple_delimiter}consumer_complaint{tuple_delimiter}用户投诉滴滴打车司机故意绕路且态度恶劣的问题){record_delimiter}  
+("entity"{tuple_delimiter}海尔{tuple_delimiter}manufacturer{tuple_delimiter}海尔是一家中国家电制造商，生产包括冰箱在内的多种家用电器){record_delimiter}  
+("entity"{tuple_delimiter}海尔冰箱{tuple_delimiter}consumer_product_model{tuple_delimiter}用户通过苏宁易购购买的海尔冰箱，收到后发现存在明显凹痕){record_delimiter}  
+("entity"{tuple_delimiter}明显凹痕{tuple_delimiter}consumer_product_defect{tuple_delimiter}用户收到的海尔冰箱存在的主要问题，即外观有明显凹痕){record_delimiter}  
+("entity"{tuple_delimiter}进口食品标签标识{tuple_delimiter}category{tuple_delimiter}与进口食品相关的标签标识规定，包括过敏原标注要求和不符合规定的处罚措施){record_delimiter}  
+("entity"{tuple_delimiter}小米{tuple_delimiter}manufacturer{tuple_delimiter}小米是一家中国科技公司，生产包括小米13手机在内的多种电子产品){record_delimiter}  
+("entity"{tuple_delimiter}小米13{tuple_delimiter}consumer_product_model{tuple_delimiter}小米生产的一款智能手机，用户报告其存在频繁死机和重启的问题){record_delimiter}  
+("entity"{tuple_delimiter}频繁死机和重启问题{tuple_delimiter}consumer_product_defect{tuple_delimiter}用户在使用小米13手机时遇到的主要问题，包括设备频繁死机和重启){record_delimiter}  
+("entity"{tuple_delimiter}主板问题{tuple_delimiter}fault_tag{tuple_delimiter}小米13手机被诊断出的硬件问题，导致设备频繁死机和重启){record_delimiter}  
+
+("relationship"{tuple_delimiter}华为{tuple_delimiter}Mate60{tuple_delimiter}华为是Mate60手机的制造商{tuple_delimiter}10){record_delimiter}  
+("relationship"{tuple_delimiter}Mate60{tuple_delimiter}发热和电池快速耗尽问题{tuple_delimiter}Mate60手机存在发热和电池快速耗尽的问题{tuple_delimiter}8){record_delimiter}  
+("relationship"{tuple_delimiter}滴滴打车{tuple_delimiter}司机绕路和态度恶劣{tuple_delimiter}用户投诉滴滴打车司机的服务问题{tuple_delimiter}7){record_delimiter}  
+("relationship"{tuple_delimiter}海尔{tuple_delimiter}海尔冰箱{tuple_delimiter}海尔是海尔冰箱的制造商{tuple_delimiter}10){record_delimiter}  
+("relationship"{tuple_delimiter}海尔冰箱{tuple_delimiter}明显凹痕{tuple_delimiter}海尔冰箱存在明显凹痕的问题{tuple_delimiter}8){record_delimiter}  
+("relationship"{tuple_delimiter}小米{tuple_delimiter}小米13{tuple_delimiter}小米是小米13手机的制造商{tuple_delimiter}10){record_delimiter}  
+("relationship"{tuple_delimiter}小米13{tuple_delimiter}频繁死机和重启问题{tuple_delimiter}小米13手机存在频繁死机和重启的问题{tuple_delimiter}8){record_delimiter}  
+
+#############################
+
+
+
+-Real Data-
+######################
+entity_types: [manufacturer, brand, vehicle, model_series, consumer_complaint, consumer_product_defect, consumer_product_case, consumer_product_model, fault_tag, category, media_report, domestic_recall, foreign_recall, tsb, car_spec, vehicle_defect_report, injury, type]
+text: {input_text}
+######################
+output:

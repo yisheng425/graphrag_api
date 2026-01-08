@@ -6,9 +6,14 @@ export GRAPHRAG_CELERY_BROKER_URL=redis://localhost:6379/1
 export GRAPHRAG_CELERY_BACKEND_URL=redis://localhost:6379/1
 nohup celery -A graphrag.service.tasks worker --pool solo --loglevel=debug >celery-0106-1541.log 2>&1 &
 
+nohup celery -A graphrag.service.tasks worker --pool prefork --concurrency=2 --loglevel=info > celery-prefork-0108.log 2>&1 &
+
+
 
 第二个终端
 nohup uvicorn graphrag.service.app:app --host 0.0.0.0 --port 8001 >uvicorn-0106-1541.log 2>&1 &
+
+nohup uvicorn graphrag.service.app:app --host 0.0.0.0 --port 8001 > uvicorn-0108.log 2>&1 &
 
 第三个终端
 查询

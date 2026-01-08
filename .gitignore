@@ -12,7 +12,7 @@ examples_notebooks/*/data
 tests/fixtures/cache
 tests/fixtures/*/cache
 tests/fixtures/*/output
-output/lancedb
+
 
 
 # Random
@@ -39,7 +39,6 @@ __blobstorage*.json
 __blobstorage__/
 
 # Getting started example
-ragtest/
 .ragtest/
 .pipelines
 .pipeline
