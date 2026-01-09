@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from pathlib import Path
 from typing import Any
@@ -21,6 +20,7 @@ from graphrag.config.enums import CacheType, IndexingMethod, ReportingType, Sear
 from graphrag.config.load_config import load_config
 from graphrag.index.validate_config import validate_config_names
 from graphrag.utils.api import reformat_context_data
+from graphrag.utils.asyncio_util import run_async
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ def run_index_job(payload: dict[str, Any]) -> dict[str, Any]:
     if payload.get("verbose"):
         logger.setLevel(logging.INFO)
 
-    outputs = asyncio.run(
+    outputs = run_async(
         api.build_index(
             config=config,
             method=method,
@@ -142,7 +142,6 @@ def run_index_job(payload: dict[str, Any]) -> dict[str, Any]:
 
 def run_query_job(payload: dict[str, Any]) -> dict[str, Any]:
     """Run a GraphRAG query job synchronously."""
-
     root_dir = Path(payload["root"]).expanduser().resolve()
     if not root_dir.is_dir():
         msg = f"Invalid root directory: {root_dir}"

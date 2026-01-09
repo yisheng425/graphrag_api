@@ -12,7 +12,7 @@ models:
     api_base: https://openrouter.ai/api/v1
     # api_version: 2024-03-01-preview
     auth_type: api_key # or azure_managed_identity
-    api_key: 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 # set this in the generated .env file
+    api_key: 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 # set this in the generated .env file
     # audience: "https://cognitiveservices.azure.com/.default"
     # organization: <organization_id>
     model: qwen/qwen3-30b-a3b-instruct-2507

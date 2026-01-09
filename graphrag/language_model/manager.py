@@ -151,3 +151,22 @@ class ModelManager:
     def list_embedding_models(self) -> dict[str, EmbeddingModel]:
         """Return a copy of all registered EmbeddingsLLM instances."""
         return dict(self.embedding_models)
+
+    def clear_all(self) -> None:
+        """清理所有已注册的模型实例。
+
+        在 Celery solo 模式下，每次任务执行前调用此方法，
+        确保不会复用绑定到已关闭事件循环的 httpx client 和 aiolimiter。
+        """
+        self.chat_models.clear()
+        self.embedding_models.clear()
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """重置单例实例。
+
+        在需要完全重建 ModelManager 时调用。
+        """
+        if cls._instance is not None:
+            cls._instance.clear_all()
+            cls._instance = None

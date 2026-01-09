@@ -3,13 +3,13 @@
 
 """A module containing validate_config_names definition."""
 
-import asyncio
 import logging
 import sys
 
 from graphrag.callbacks.noop_workflow_callbacks import NoopWorkflowCallbacks
 from graphrag.config.models.graph_rag_config import GraphRagConfig
 from graphrag.language_model.manager import ModelManager
+from graphrag.utils.asyncio_util import run_async
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def validate_config_names(parameters: GraphRagConfig) -> None:
     )
 
     try:
-        asyncio.run(llm.achat("This is an LLM connectivity test. Say Hello World"))
+        run_async(llm.achat("This is an LLM connectivity test. Say Hello World"))
         logger.info("LLM Config Params Validated")
     except Exception as e:  # noqa: BLE001
         logger.error(f"LLM configuration error detected. Exiting...\n{e}")  # noqa
@@ -49,7 +49,7 @@ def validate_config_names(parameters: GraphRagConfig) -> None:
     )
 
     try:
-        asyncio.run(embed_llm.aembed_batch(["This is an LLM Embedding Test String"]))
+        run_async(embed_llm.aembed_batch(["This is an LLM Embedding Test String"]))
         logger.info("Embedding LLM Config Params Validated")
     except Exception as e:  # noqa: BLE001
         logger.error(f"Embedding LLM configuration error detected. Exiting...\n{e}")  # noqa
