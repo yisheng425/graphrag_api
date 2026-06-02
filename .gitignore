@@ -59,4 +59,5 @@ docsite/
 .ipynb_checkpoints/
 .coda/
 .semversioner
-.ruff_cache
+.ruff_cachesettings.yaml
+ragtest/settings.yaml

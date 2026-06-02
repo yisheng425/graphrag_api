@@ -15,3 +15,6 @@ graphrag query --root ./ragtest --method local --query "what is 别克?"
 中文prompt 微调
 python -m graphrag prompt-tune --root ./ragtest --config ./ragtest/settings.yaml --language "Chinese" --domain "product_safety" --output ./ragtest/prompts_chinese --limit 2
 python -m graphrag prompt-tune  --root ./ragtest --domain "Knowledge graph in the field of product safety" --selection-method all --max-tokens 80000 --language "Chinese" --discover-entity-types --output ./ragtest/prompts_chinese
+
+uv环境 运行index
+uv run graphrag index --root ./ragtest --config ./ragtest/settings.yaml --verbose
